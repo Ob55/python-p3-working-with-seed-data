@@ -10,7 +10,32 @@ from models import Game
 fake = Faker()
 
 if __name__ == '__main__':
-    
+
     engine = create_engine('sqlite:///seed_db.db')
+    
+
     Session = sessionmaker(bind=engine)
+    
     session = Session()
+    
+
+    Game.__table__.drop(engine)
+    
+    
+    Game.__table__.create(engine)
+    
+    
+    for _ in range(50):
+        game = Game(
+            title=fake.name(),
+            genre=fake.word(),
+            platform=fake.word(),
+            price=random.randint(0, 60)
+        )
+        session.add(game)
+    
+
+    session.commit()
+    
+
+    session.close()
